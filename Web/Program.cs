@@ -22,6 +22,7 @@ namespace SmartHome.Pwa.Web
                     config.SetBasePath(Directory.GetCurrentDirectory());
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
                     config.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: false);
+                    config.AddEnvironmentVariables();
                 })
                 .UseStartup<Startup>();
     }

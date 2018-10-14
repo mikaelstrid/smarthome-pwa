@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartHome.Pwa.Core.Interfaces;
+using SmartHome.Pwa.Infrastructure.Configuration;
 using SmartHome.Pwa.Infrastructure.TemperatureHumidity;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -23,7 +24,7 @@ namespace SmartHome.Pwa.Web
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.Configure<TemperatureHumidityTableStorage.Options>(Configuration.GetSection("TemperatureHumidityTableStorage"));
+            services.Configure<TableStorageOptions>(Configuration.GetSection("TableStorage"));
 
             services.AddTransient<ITemperatureHumidityRepository, TemperatureHumidityTableStorage>();
 

@@ -5,22 +5,23 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using SmartHome.Pwa.Core.Interfaces;
 using SmartHome.Pwa.Core.Models;
+using SmartHome.Pwa.Infrastructure.Configuration;
 using SmartHome.Pwa.Infrastructure.TemperatureHumidity.Models;
 
 namespace SmartHome.Pwa.Infrastructure.TemperatureHumidity
 {
     public class TemperatureHumidityTableStorage : ITemperatureHumidityRepository
     {
-        private readonly Options _options;
+        private readonly TableStorageOptions _options;
 
-        public TemperatureHumidityTableStorage(IOptions<Options> optionsAccessor)
+        public TemperatureHumidityTableStorage(IOptions<TableStorageOptions> optionsAccessor)
         {
             _options = optionsAccessor.Value;
         }
         
         public async Task<TemperatureHumidityReading> GetLatest(string sensorId)
         {
-            var storageAccount = CloudStorageAccount.Parse(_options.StorageConnectionString);
+            var storageAccount = CloudStorageAccount.Parse(_options.ConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
             var table = tableClient.GetTableReference("TemperatureHumidity");
 
@@ -38,11 +39,6 @@ namespace SmartHome.Pwa.Infrastructure.TemperatureHumidity
             } while (continuationToken != null);
 
             return result?.MapToBusinessModel();
-        }
-
-        public class Options
-        {
-            public string StorageConnectionString { get; set; }
         }
     }
 }
