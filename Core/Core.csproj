@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>SmartHome.Pwa.Core</AssemblyName>
+    <RootNamespace>SmartHome.Pwa.Core</RootNamespace>
+  </PropertyGroup>
+
+</Project>
