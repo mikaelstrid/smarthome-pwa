@@ -12,6 +12,7 @@
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
     <AssemblyName>SmartHome.Pwa.Web</AssemblyName>
     <RootNamespace>SmartHome.Pwa.Web</RootNamespace>
+    <UserSecretsId>6abe5b5a-f92d-4f68-8a6f-6d3979fad2c5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
