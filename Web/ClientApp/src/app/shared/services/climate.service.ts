@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ITemperatureHumidityReading } from '../models/temperature-humidity-reading.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ClimateService {
-   constructor() {}
+   constructor(private httpClient: HttpClient) {}
 
    getLatestTemperatureHumidity(sensorId: string): Observable<ITemperatureHumidityReading> {
-      return of({
-         sensorId: '',
-         timestampWest: new Date(),
-         temperature: 25.4,
-         humidity: 46.7,
-      });
+      return this.httpClient.get<ITemperatureHumidityReading>(
+         `/api/climate/${sensorId}/latest-temperature-humidity`
+      );
    }
 }

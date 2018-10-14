@@ -1,3 +1,3 @@
 <div class="h-100 d-flex flex-column justify-content-center align-items-center">
-   <div class="temperature-reading">{{latestTemperature}}&deg;</div>
+   <div *ngIf="latestTemperature" class="temperature-reading">{{latestTemperature}}&deg;</div>
 </div>

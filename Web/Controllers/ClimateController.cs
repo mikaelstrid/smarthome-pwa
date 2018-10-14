@@ -15,8 +15,8 @@ namespace SmartHome.Pwa.Web.Controllers
             _temperatureHumidityRepository = temperatureHumidityRepository;
         }
 
-        [HttpGet("{sensorId}/temperature-humidity")]
-        public async Task<IActionResult> GetTemperatureHumidity(string sensorId)
+        [HttpGet("{sensorId}/latest-temperature-humidity")]
+        public async Task<IActionResult> GetLatestTemperatureHumidity(string sensorId)
         {
             var result = await _temperatureHumidityRepository.GetLatest(sensorId);
 
