@@ -6,23 +6,20 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { TemperatureComponent } from './temperature/temperature.component';
 import { SensorTemperatureComponent } from './temperature/components/sensor-temperature/sensor-temperature.component';
+import { ClimateService } from './shared/services/climate.service';
 
 @NgModule({
-   declarations: [
-      AppComponent,
-      TemperatureComponent,
-      SensorTemperatureComponent,
-   ],
+   declarations: [AppComponent, TemperatureComponent, SensorTemperatureComponent],
    imports: [
       BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
       HttpClientModule,
       RouterModule.forRoot([
          // { path: '', component: HomeComponent, pathMatch: 'full' }
          { path: 'temperatur', component: TemperatureComponent },
-         { path: '**', redirectTo: 'temperatur' }
-      ])
+         { path: '**', redirectTo: 'temperatur' },
+      ]),
    ],
-   providers: [],
-   bootstrap: [AppComponent]
+   providers: [ClimateService],
+   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
