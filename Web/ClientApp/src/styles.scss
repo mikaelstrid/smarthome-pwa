@@ -1,4 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
-body {
-    background-color: #f00;
-}
+// Bootstrap customization
+@import "scss/bootstrap/pre-default";
+@import "scss/bootstrap/config";
+
+@import "scss/global-styles";
