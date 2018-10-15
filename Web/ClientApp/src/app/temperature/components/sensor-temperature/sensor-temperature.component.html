@@ -1,3 +1,4 @@
 <div class="h-100 d-flex flex-column justify-content-center align-items-center">
-   <div *ngIf="latestTemperature" class="temperature-reading">{{latestTemperature}}&deg;</div>
+   <span *ngIf="latestReading" class="temperature-reading">{{latestReading.temperature}}&deg;</span>
+   <span *ngIf="latestReading" class="text-muted">{{latestReading.timestampWest | date:'HH:mm:ss'}}</span>
 </div>
