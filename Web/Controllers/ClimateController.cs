@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Pwa.Core.Interfaces;
+using SmartHome.Pwa.Core.Utilities;
 using SmartHome.Pwa.Web.Models;
 
 namespace SmartHome.Pwa.Web.Controllers
@@ -20,15 +21,13 @@ namespace SmartHome.Pwa.Web.Controllers
         {
             var result = await _temperatureHumidityRepository.GetLatest(sensorId);
 
-            if (result == null)
-                return NotFound();
+            if (!result.IsSuccessful)
+                return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);
 
-            return Ok(result.ToApiModel());
+            return Ok(result.Data.ToApiModel());
         }
     }
 }
 
 //:TODO:
-// * Gå igenom West/UTC (ändra även namngivning i Table Storage)
-// * Lägg upp DateTimeHelpers på Github
-// * Lägg upp Result-klasserna på Github
+// * Gå igenom West/UTC

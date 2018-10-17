@@ -1,12 +1,13 @@
 ﻿using System;
 using SmartHome.Pwa.Core.Models;
+using SmartHome.Pwa.Core.Utilities;
 
 namespace SmartHome.Pwa.Web.Models
 {
     public class TemperatureHumidityApiModel
     {
         public string SensorId { get; set; }
-        public DateTimeOffset TimestampWest { get; set; }
+        public DateTime TimestampWest { get; set; }
         public double Temperature { get; set; }
         public double Humidity { get; set; }
     }
@@ -18,7 +19,7 @@ namespace SmartHome.Pwa.Web.Models
             return new TemperatureHumidityApiModel
             {
                 SensorId = businessModel.SensorId,
-                TimestampWest = businessModel.TimestampUtc,
+                TimestampWest = DateTimeOffsetHelper.ConvertToWest(businessModel.TimestampUtc),
                 Temperature = businessModel.Temperature,
                 Humidity = businessModel.Humidity
             };
