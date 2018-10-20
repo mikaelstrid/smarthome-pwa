@@ -28,6 +28,3 @@ namespace SmartHome.Pwa.Web.Controllers
         }
     }
 }
-
-//:TODO:
-// * Gå igenom West/UTC
