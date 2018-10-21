@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { TemperatureComponent } from './temperature/temperature.component';
 import { SensorTemperatureComponent } from './temperature/components/sensor-temperature/sensor-temperature.component';
 import { ClimateService } from './shared/services/climate.service';
+import { SignalRService } from './shared/services/signalr.service';
 
 @NgModule({
    declarations: [AppComponent, TemperatureComponent, SensorTemperatureComponent],
@@ -19,7 +20,7 @@ import { ClimateService } from './shared/services/climate.service';
          { path: '**', redirectTo: 'temperatur' },
       ]),
    ],
-   providers: [ClimateService],
+   providers: [ClimateService, SignalRService],
    bootstrap: [AppComponent],
 })
 export class AppModule {}
