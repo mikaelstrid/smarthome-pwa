@@ -12,6 +12,7 @@ import { SignalRConnectionInfo } from '../models/signalr-connection-info.model';
 export class SignalRService {
    private readonly _http: HttpClient;
    private readonly _baseUrl: string =
+      // 'http://localhost:7071/api/';
       'https://smarthomereceiversappservice.azurewebsites.net/api/';
    private hubConnection: HubConnection;
    messages: Subject<string> = new Subject();
@@ -27,12 +28,14 @@ export class SignalRService {
 
    init() {
       this.getConnectionInfo().subscribe(info => {
+         console.log(info);
+
          const options = {
             accessTokenFactory: () => info.accessKey,
          };
 
          this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(info.url, options)
+            .withUrl(this._baseUrl)
             .configureLogging(signalR.LogLevel.Information)
             .build();
 
