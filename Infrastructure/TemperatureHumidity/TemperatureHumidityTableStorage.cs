@@ -33,21 +33,10 @@ namespace SmartHome.Pwa.Infrastructure.TemperatureHumidity
                     .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, sensorId))
                     .Take(1);
 
-                TemperatureHumidityReadingEntity result;
-                TableContinuationToken continuationToken = null;
-                do
-                {
-                    var employees = await table.ExecuteQuerySegmentedAsync(query, continuationToken);
-                    result = employees.FirstOrDefault();
-                    continuationToken = employees.ContinuationToken;
-                } while (continuationToken != null);
-
-                if (result == null)
-                {
-                    return DataResult<TemperatureHumidityReading>.CreateNotFoundResult();
-                }
-
-                return DataResult<TemperatureHumidityReading>.CreateSuccessResult(result?.MapToBusinessModel());
+                var result = (await table.ExecuteQuerySegmentedAsync(query, null)).FirstOrDefault();
+                return result != null 
+                    ? DataResult<TemperatureHumidityReading>.CreateSuccessResult(result.MapToBusinessModel()) 
+                    : DataResult<TemperatureHumidityReading>.CreateNotFoundResult();
             }
             catch (Exception e)
             {

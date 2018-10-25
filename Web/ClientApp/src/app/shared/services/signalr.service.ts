@@ -5,6 +5,7 @@ import * as signalR from '@aspnet/signalr';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { SignalRConnectionInfo } from '../models/signalr-connection-info.model';
+import { ITemperatureHumidityReading } from '../models/temperature-humidity-reading.model';
 
 @Injectable({
    providedIn: 'root',
@@ -15,7 +16,7 @@ export class SignalRService {
       // 'http://localhost:7071/api/';
       'https://smarthomereceiversappservice.azurewebsites.net/api/';
    private hubConnection: HubConnection;
-   messages: Subject<string> = new Subject();
+   temperatureHumidityReadings: Subject<ITemperatureHumidityReading> = new Subject();
 
    constructor(http: HttpClient) {
       this._http = http;
@@ -26,13 +27,11 @@ export class SignalRService {
       return this._http.get<SignalRConnectionInfo>(requestUrl);
    }
 
-   init() {
+   init(): void {
       this.getConnectionInfo().subscribe(info => {
-         console.log(info);
-
-         const options = {
-            accessTokenFactory: () => info.accessKey,
-         };
+         // const options = {
+         //    accessTokenFactory: () => info.accessKey,
+         // };
 
          this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(this._baseUrl)
@@ -41,9 +40,9 @@ export class SignalRService {
 
          this.hubConnection.start().catch(err => console.error(err.toString()));
 
-         this.hubConnection.on('update-temperature-humidity', (data: any) => {
+         this.hubConnection.on('update-temperature-humidity', (data: ITemperatureHumidityReading) => {
             console.log(data);
-            // this.messages.next(data);
+            this.temperatureHumidityReadings.next(data);
          });
       });
    }
