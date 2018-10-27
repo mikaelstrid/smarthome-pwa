@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartHome.Pwa.Core.Interfaces;
@@ -25,6 +27,17 @@ namespace SmartHome.Pwa.Web.Controllers
                 return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);
 
             return Ok(result.Data.ToApiModel());
+        }
+
+        [HttpGet("{sensorId}/temperature-humidity")]
+        public async Task<IActionResult> GetTemperatureHumidity(string sensorId, DateTime from, DateTime to)
+        {
+            var result = await _temperatureHumidityRepository.Get(sensorId, DateTimeHelper.ConvertWestToUtcOffset(from), DateTimeHelper.ConvertWestToUtcOffset(to));
+
+            if (!result.IsSuccessful)
+                return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);
+
+            return Ok(result.Data.Select(r => r.ToApiModel()));
         }
     }
 }
