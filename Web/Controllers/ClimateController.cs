@@ -11,17 +11,17 @@ namespace SmartHome.Pwa.Web.Controllers
     [Route("api/[controller]")]
     public class ClimateController : Controller
     {
-        private readonly ITemperatureHumidityRepository _temperatureHumidityRepository;
+        private readonly IClimateService _climateService;
 
-        public ClimateController(ITemperatureHumidityRepository temperatureHumidityRepository)
+        public ClimateController(IClimateService climateService)
         {
-            _temperatureHumidityRepository = temperatureHumidityRepository;
+            _climateService = climateService;
         }
 
         [HttpGet("{sensorId}/latest-temperature-humidity")]
         public async Task<IActionResult> GetLatestTemperatureHumidity(string sensorId)
         {
-            var result = await _temperatureHumidityRepository.GetLatest(sensorId);
+            var result = await _climateService.GetLatestTemperatureHumidityReading(sensorId);
 
             if (!result.IsSuccessful)
                 return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);
@@ -32,7 +32,7 @@ namespace SmartHome.Pwa.Web.Controllers
         [HttpGet("{sensorId}/temperature-humidity")]
         public async Task<IActionResult> GetTemperatureHumidity(string sensorId, DateTime from, DateTime to)
         {
-            var result = await _temperatureHumidityRepository.Get(sensorId, DateTimeHelper.ConvertWestToUtcOffset(from), DateTimeHelper.ConvertWestToUtcOffset(to));
+            var result = await _climateService.GetTemperatureHumidityReadings(sensorId, DateTimeHelper.ConvertWestToUtcOffset(from), DateTimeHelper.ConvertWestToUtcOffset(to));
 
             if (!result.IsSuccessful)
                 return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);
