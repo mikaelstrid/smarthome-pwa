@@ -21,9 +21,13 @@ namespace SmartHome.Pwa.Core.Services
             return await _temperatureHumidityRepository.GetLatest(sensorId);
         }
 
-        public async Task<DataResult<IEnumerable<TemperatureHumidityReading>>> GetTemperatureHumidityReadings(string sensorId, DateTimeOffset @from, DateTimeOffset to)
+        public async Task<DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>> GetTemperatureHumidityReadings(string sensorId, DateTimeOffset from, DateTimeOffset to)
         {
-            return await _temperatureHumidityRepository.Get(sensorId, from, to);
+            var readings = await _temperatureHumidityRepository.Get(sensorId, from, to);
+
+            //:TODO:
+
+            return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>.CreateSuccessResult(new List<AggregatedTemperatureHumidityReadings>());
         }
     }
 }

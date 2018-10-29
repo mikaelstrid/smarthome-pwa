@@ -9,6 +9,6 @@ namespace SmartHome.Pwa.Core.Interfaces
     public interface IClimateService
     {
         Task<DataResult<TemperatureHumidityReading>> GetLatestTemperatureHumidityReading(string sensorId);
-        Task<DataResult<IEnumerable<TemperatureHumidityReading>>> GetTemperatureHumidityReadings(string sensorId, DateTimeOffset from, DateTimeOffset to);
+        Task<DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>> GetTemperatureHumidityReadings(string sensorId, DateTimeOffset from, DateTimeOffset to);
     }
 }
