@@ -31,13 +31,13 @@ namespace SmartHome.Pwa.Core.Services
             if (!readingsResult.IsSuccessful)
                 return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>.CreateErrorResult(readingsResult.Error);
 
-            var intervalLength = CalculateInterval(to - from);
+            var intervalLength = CalculateIntervalLength(to - from);
             var intervalDataGroups = CreateIntervalDataGroups(readingsResult.Data, intervalLength);
 
             return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>.CreateSuccessResult(new List<AggregatedTemperatureHumidityReadings>());
         }
 
-        internal static TimeSpan CalculateInterval(TimeSpan input)
+        internal static TimeSpan CalculateIntervalLength(TimeSpan input)
         {
             var intervalLengths = new[]
             {
@@ -67,11 +67,98 @@ namespace SmartHome.Pwa.Core.Services
 
         internal static IEnumerable<IntervalDataGroup> CreateIntervalDataGroups(IEnumerable<TemperatureHumidityReading> readings, TimeSpan intervalLength)
         {
-            throw new NotImplementedException();
-        }
-    }
+            if (readings == null || !readings.Any()) return new IntervalDataGroup[0];
 
-    internal class IntervalDataGroup
-    {
+            var dictionary = new SortedDictionary<long, IntervalDataGroup>();
+            foreach (var reading in readings)
+            {
+                var intervalStartTime = CalculateIntervalStartTime(reading.Timestamp, intervalLength);
+                var key = intervalStartTime.UtcTicks;
+                if (!dictionary.ContainsKey(key))
+                {
+                    dictionary.Add(key, new IntervalDataGroup(intervalStartTime, intervalLength, reading));
+                }
+                else
+                {
+                    dictionary[key].AddReading(reading);
+                }
+            }
+
+            return dictionary.Values.ToArray();
+        }
+
+        internal static DateTimeOffset CalculateIntervalStartTime(DateTimeOffset timestamp, TimeSpan intervalLength)
+        {
+            if (intervalLength < TimeSpan.FromMinutes(1))
+            {
+                return new DateTimeOffset(
+                    timestamp.Year,
+                    timestamp.Month,
+                    timestamp.Day,
+                    timestamp.Hour,
+                    timestamp.Minute,
+                    timestamp.Second / intervalLength.Seconds * intervalLength.Seconds,
+                    timestamp.Offset);
+            }
+
+            if (intervalLength < TimeSpan.FromHours(1))
+            {
+                return new DateTimeOffset(
+                    timestamp.Year,
+                    timestamp.Month,
+                    timestamp.Day,
+                    timestamp.Hour,
+                    timestamp.Minute / intervalLength.Minutes * intervalLength.Minutes,
+                    0,
+                    timestamp.Offset);
+            }
+
+            if (intervalLength < TimeSpan.FromDays(1))
+            {
+                return new DateTimeOffset(
+                    timestamp.Year,
+                    timestamp.Month,
+                    timestamp.Day,
+                    timestamp.Hour / intervalLength.Hours * intervalLength.Hours,
+                    0,
+                    0,
+                    timestamp.Offset);
+            }
+
+            return new DateTimeOffset(
+                timestamp.Year,
+                timestamp.Month,
+                timestamp.Day / intervalLength.Days * intervalLength.Days,
+                0, 
+                0,
+                0,
+                timestamp.Offset);
+        }
+
+
+        public class IntervalDataGroup
+        {
+            public DateTimeOffset From { get; }
+            public DateTimeOffset To { get; }
+            public int Count { get; private set; }
+            public double TotalTemperature { get; private set; }
+            public double TotalHumidity { get; private set; }
+
+            public IntervalDataGroup(DateTimeOffset from, TimeSpan length, TemperatureHumidityReading reading)
+            {
+                From = from;
+                To = from.Add(length);
+                Count = 1;
+                TotalTemperature = reading.Temperature;
+                TotalHumidity = reading.Humidity;
+            }
+
+            public void AddReading(TemperatureHumidityReading reading)
+            {
+                Count++;
+                TotalTemperature += reading.Temperature;
+                TotalHumidity += reading.Humidity;
+            }
+        }
     }
 }

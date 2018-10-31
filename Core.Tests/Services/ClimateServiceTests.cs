@@ -25,7 +25,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
 
             // ACT
-            var result = ClimateService.CalculateInterval(TimeSpan.FromSeconds(intervalLengthInSeconds));
+            var result = ClimateService.CalculateIntervalLength(TimeSpan.FromSeconds(intervalLengthInSeconds));
 
             // ASSERT
             result.TotalSeconds.Should().Be(expectedResultInSeconds);
@@ -33,12 +33,36 @@ namespace SmartHome.Pwa.Core.Tests.Services
 
 
         [Fact]
-        public void CreateIntervalDataGroupsCase1()
+        public void CreateIntervalDataGroups_ShouldReturnEmptyArray_GivenNull()
         {
             // ARRANGE
-            var readings = new []
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(null, TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnEmptyArray_GivenEmptyArray()
+        {
+            // ARRANGE
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(new TemperatureHumidityReading[0], TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnOneGroup_GivenOneReading()
+        {
+            // ARRANGE
+            var readings = new[]
             {
-                new TemperatureHumidityReading()
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") }
             };
 
             // ACT
@@ -46,6 +70,164 @@ namespace SmartHome.Pwa.Core.Tests.Services
 
             // ASSERT
             result.Count().Should().Be(1);
+            result.First().Count.Should().Be(1);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:18:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:19:00 +01:00"));
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnOneGroup_GivenTwoReadingsWithinOneMinute()
+        {
+            // ARRANGE
+            var readings = new[]
+            {
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:47 +01:00") }
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Count().Should().Be(1);
+            result.First().Count.Should().Be(2);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:18:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:19:00 +01:00"));
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnTwoGroups_GivenTwoReadings90SecondsApart()
+        {
+            // ARRANGE
+            var readings = new[]
+            {
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:19:47 +01:00") }
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Count().Should().Be(2);
+            result.First().Count.Should().Be(1);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:18:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:19:00 +01:00"));
+            result.Skip(1).First().Count.Should().Be(1);
+            result.Skip(1).First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:19:00 +01:00"));
+            result.Skip(1).First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:20:00 +01:00"));
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnTwoGroups_GivenTwoReadings150SecondsApart()
+        {
+            // ARRANGE
+            var readings = new[]
+            {
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:20:47 +01:00") }
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Count().Should().Be(2);
+            result.First().Count.Should().Be(1);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:18:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:19:00 +01:00"));
+            result.Skip(1).First().Count.Should().Be(1);
+            result.Skip(1).First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:20:00 +01:00"));
+            result.Skip(1).First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:21:00 +01:00"));
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnThreeGroups_GivenTwoReadings150SecondsApartInReverseOrder()
+        {
+            // ARRANGE
+            var readings = new[]
+            {
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:20:47 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") }
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Count().Should().Be(2);
+            result.First().Count.Should().Be(1);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:18:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:19:00 +01:00"));
+            result.Skip(1).First().Count.Should().Be(1);
+            result.Skip(1).First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:20:00 +01:00"));
+            result.Skip(1).First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:21:00 +01:00"));
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnTwoGroups_GivenTwoReadings50MinutesApart_And15MinuteInterval()
+        {
+            // ARRANGE
+            var readings = new[]
+            {
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:01:07 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:51:47 +01:00") }
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(15));
+
+            // ASSERT
+            result.Count().Should().Be(2);
+            result.First().Count.Should().Be(1);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:00:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:15:00 +01:00"));
+            result.Skip(1).First().Count.Should().Be(1);
+            result.Skip(1).First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:45:00 +01:00"));
+            result.Skip(1).First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 21:00:00 +01:00"));
+        }
+
+        [Fact]
+        public void CreateIntervalDataGroups_ShouldReturnTwoGroups_GivenThreeReadings59MinutesApart_And15MinuteInterval()
+        {
+            // ARRANGE
+            var readings = new[]
+            {
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:01:07 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:51:47 +01:00") },
+                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:11:07 +01:00") }
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(15));
+
+            // ASSERT
+            result.Count().Should().Be(2);
+            result.First().Count.Should().Be(2);
+            result.First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:00:00 +01:00"));
+            result.First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 20:15:00 +01:00"));
+            result.Skip(1).First().Count.Should().Be(1);
+            result.Skip(1).First().From.Should().Be(DateTimeOffset.Parse("2018-10-30 20:45:00 +01:00"));
+            result.Skip(1).First().To.Should().Be(DateTimeOffset.Parse("2018-10-30 21:00:00 +01:00"));
+        }
+
+
+        [Theory]
+        [InlineData("2018-10-31 21:17:17 +01:00", 1, "2018-10-31 21:17:17 +01:00")]
+        [InlineData("2018-10-31 21:17:17 +01:00", 30, "2018-10-31 21:17:00 +01:00")]
+        [InlineData("2018-10-31 21:17:17 +01:00", 60, "2018-10-31 21:17:00 +01:00")]
+        [InlineData("2018-10-31 21:17:17 +01:00", 60*5, "2018-10-31 21:15:00 +01:00")]
+        [InlineData("2018-10-31 21:17:17 +01:00", 60 * 60 * 4, "2018-10-31 20:00:00 +01:00")]
+        [InlineData("2018-10-31 21:17:17 +01:00", 60 * 60 * 24, "2018-10-31 00:00:00 +01:00")]
+        public void CalculateIntervalStartTime_TestCase(string timestamp, int intervalLengthInSeconds, string expectedResult)
+        {
+            // ARRANGE
+
+            // ACT
+            var result = ClimateService.CalculateIntervalStartTime(DateTimeOffset.Parse(timestamp), TimeSpan.FromSeconds(intervalLengthInSeconds));
+
+            // ASSERT
+            result.Should().Be(DateTimeOffset.Parse(expectedResult));
         }
     }
 }

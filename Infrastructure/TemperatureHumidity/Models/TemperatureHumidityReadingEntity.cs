@@ -18,7 +18,7 @@ namespace SmartHome.Pwa.Infrastructure.TemperatureHumidity.Models
             return new TemperatureHumidityReading
             {
                 SensorId = PartitionKey,
-                TimestampUtc = ReadAtUtc,
+                Timestamp = ReadAtUtc,
                 Temperature = Temperature,
                 Humidity = Humidity
             };
