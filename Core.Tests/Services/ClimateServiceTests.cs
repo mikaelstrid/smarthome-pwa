@@ -1,6 +1,8 @@
 using FluentAssertions;
 using SmartHome.Pwa.Core.Services;
 using System;
+using System.Linq;
+using SmartHome.Pwa.Core.Models;
 using Xunit;
 
 namespace SmartHome.Pwa.Core.Tests.Services
@@ -27,6 +29,23 @@ namespace SmartHome.Pwa.Core.Tests.Services
 
             // ASSERT
             result.TotalSeconds.Should().Be(expectedResultInSeconds);
+        }
+
+
+        [Fact]
+        public void CreateIntervalDataGroupsCase1()
+        {
+            // ARRANGE
+            var readings = new []
+            {
+                new TemperatureHumidityReading()
+            };
+
+            // ACT
+            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+
+            // ASSERT
+            result.Count().Should().Be(1);
         }
     }
 }
