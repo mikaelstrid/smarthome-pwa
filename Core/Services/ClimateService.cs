@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SmartHome.Pwa.Core.Interfaces;
+using SmartHome.Pwa.Core.Models;
+using SmartHome.Pwa.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartHome.Pwa.Core.Interfaces;
-using SmartHome.Pwa.Core.Models;
-using SmartHome.Pwa.Core.Utilities;
 
 namespace SmartHome.Pwa.Core.Services
 {
@@ -25,16 +25,23 @@ namespace SmartHome.Pwa.Core.Services
         public async Task<DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>> GetTemperatureHumidityReadings(string sensorId, DateTimeOffset from, DateTimeOffset to)
         {
             if (!(to > from))
+            {
                 return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>.CreateErrorResult(new Error(ErrorCode.FailedWithoutException, null, "To must be after from"));
+            }
 
             var readingsResult = await _temperatureHumidityRepository.Get(sensorId, from, to);
             if (!readingsResult.IsSuccessful)
+            {
                 return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>.CreateErrorResult(readingsResult.Error);
+            }
 
-            var intervalLength = CalculateIntervalLength(to - from);
-            var intervalDataGroups = CreateIntervalDataGroups(readingsResult.Data, intervalLength);
+            var intervalDataGroups = SortDataIntoGroups(
+                readingsResult.Data,
+                CalculateIntervalLength(to - from)
+                );
 
-            return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>.CreateSuccessResult(new List<AggregatedTemperatureHumidityReadings>());
+            return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>
+                .CreateSuccessResult(intervalDataGroups.Select(g => g.MapToBusinessModel()));
         }
 
         internal static TimeSpan CalculateIntervalLength(TimeSpan input)
@@ -65,9 +72,12 @@ namespace SmartHome.Pwa.Core.Services
             return result.Any() ? result.FirstOrDefault() : TimeSpan.FromHours(24);
         }
 
-        internal static IEnumerable<IntervalDataGroup> CreateIntervalDataGroups(IEnumerable<TemperatureHumidityReading> readings, TimeSpan intervalLength)
+        internal static IEnumerable<IntervalDataGroup> SortDataIntoGroups(IEnumerable<TemperatureHumidityReading> readings, TimeSpan intervalLength)
         {
-            if (readings == null || !readings.Any()) return new IntervalDataGroup[0];
+            if (readings == null || !readings.Any())
+            {
+                return new IntervalDataGroup[0];
+            }
 
             var dictionary = new SortedDictionary<long, IntervalDataGroup>();
             foreach (var reading in readings)
@@ -129,7 +139,7 @@ namespace SmartHome.Pwa.Core.Services
                 timestamp.Year,
                 timestamp.Month,
                 timestamp.Day / intervalLength.Days * intervalLength.Days,
-                0, 
+                0,
                 0,
                 0,
                 timestamp.Offset);
@@ -158,6 +168,18 @@ namespace SmartHome.Pwa.Core.Services
                 Count++;
                 TotalTemperature += reading.Temperature;
                 TotalHumidity += reading.Humidity;
+            }
+
+            public AggregatedTemperatureHumidityReadings MapToBusinessModel()
+            {
+                return new AggregatedTemperatureHumidityReadings
+                {
+                    From = From,
+                    To = To,
+                    Count = Count,
+                    AverageTemperature = Count > 0 ? TotalTemperature / Count : 0,
+                    AverageHumidity = Count > 0 ? TotalHumidity / Count : 0
+                };
             }
         }
     }

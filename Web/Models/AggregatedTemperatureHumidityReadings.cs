@@ -20,8 +20,8 @@ namespace SmartHome.Pwa.Web.Models
             return new AggregatedTemperatureHumidityApiModel
             {
                 Count = businessModel.Count,
-                FromWest = DateTimeOffsetHelper.ConvertToWest(businessModel.FromUtc),
-                ToWest = DateTimeOffsetHelper.ConvertToWest(businessModel.ToUtc),
+                FromWest = DateTimeOffsetHelper.ConvertToWest(businessModel.From),
+                ToWest = DateTimeOffsetHelper.ConvertToWest(businessModel.To),
                 AverageTemperature = businessModel.AverageTemperature,
                 AverageHumidity = businessModel.AverageHumidity
             };

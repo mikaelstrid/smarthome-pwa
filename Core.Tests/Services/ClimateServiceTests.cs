@@ -38,7 +38,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(null, TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(null, TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Should().BeEmpty();
@@ -50,7 +50,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(new TemperatureHumidityReading[0], TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(new TemperatureHumidityReading[0], TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Should().BeEmpty();
@@ -66,7 +66,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Count().Should().Be(1);
@@ -86,7 +86,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Count().Should().Be(1);
@@ -106,7 +106,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Count().Should().Be(2);
@@ -129,7 +129,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Count().Should().Be(2);
@@ -152,7 +152,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(1));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(1));
 
             // ASSERT
             result.Count().Should().Be(2);
@@ -175,7 +175,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(15));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(15));
 
             // ASSERT
             result.Count().Should().Be(2);
@@ -199,7 +199,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             };
 
             // ACT
-            var result = ClimateService.CreateIntervalDataGroups(readings, TimeSpan.FromMinutes(15));
+            var result = ClimateService.SortDataIntoGroups(readings, TimeSpan.FromMinutes(15));
 
             // ASSERT
             result.Count().Should().Be(2);
