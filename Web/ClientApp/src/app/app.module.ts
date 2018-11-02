@@ -8,9 +8,10 @@ import { TemperatureComponent } from './temperature/temperature.component';
 import { SensorTemperatureComponent } from './temperature/components/sensor-temperature/sensor-temperature.component';
 import { ClimateService } from './shared/services/climate.service';
 import { SignalRService } from './shared/services/signalr.service';
+import { SensorTemperatureGraphComponent } from './temperature/components/sensor-temperature-graph/sensor-temperature-graph.component';
 
 @NgModule({
-   declarations: [AppComponent, TemperatureComponent, SensorTemperatureComponent],
+   declarations: [AppComponent, TemperatureComponent, SensorTemperatureComponent, SensorTemperatureGraphComponent],
    imports: [
       BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
       HttpClientModule,

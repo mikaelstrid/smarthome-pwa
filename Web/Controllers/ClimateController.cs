@@ -30,9 +30,9 @@ namespace SmartHome.Pwa.Web.Controllers
         }
 
         [HttpGet("{sensorId}/temperature-humidity")]
-        public async Task<IActionResult> GetTemperatureHumidity(string sensorId, DateTime from, DateTime to)
+        public async Task<IActionResult> GetTemperatureHumidity(string sensorId, DateTime fromWest, DateTime toWest)
         {
-            var result = await _climateService.GetTemperatureHumidityReadings(sensorId, DateTimeHelper.ConvertWestToUtcOffset(from), DateTimeHelper.ConvertWestToUtcOffset(to));
+            var result = await _climateService.GetTemperatureHumidityReadings(sensorId, DateTimeHelper.ConvertWestToUtcOffset(fromWest), DateTimeHelper.ConvertWestToUtcOffset(toWest));
 
             if (!result.IsSuccessful)
                 return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);

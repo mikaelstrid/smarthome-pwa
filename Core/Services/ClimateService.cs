@@ -36,6 +36,7 @@ namespace SmartHome.Pwa.Core.Services
             }
 
             var intervalDataGroups = SortDataIntoGroups(
+                sensorId,
                 readingsResult.Data,
                 CalculateIntervalLength(to - from)
                 );
@@ -72,7 +73,7 @@ namespace SmartHome.Pwa.Core.Services
             return result.Any() ? result.FirstOrDefault() : TimeSpan.FromHours(24);
         }
 
-        internal static IEnumerable<IntervalDataGroup> SortDataIntoGroups(IEnumerable<TemperatureHumidityReading> readings, TimeSpan intervalLength)
+        internal static IEnumerable<IntervalDataGroup> SortDataIntoGroups(string sensorId, IEnumerable<TemperatureHumidityReading> readings, TimeSpan intervalLength)
         {
             if (readings == null || !readings.Any())
             {
@@ -86,7 +87,7 @@ namespace SmartHome.Pwa.Core.Services
                 var key = intervalStartTime.UtcTicks;
                 if (!dictionary.ContainsKey(key))
                 {
-                    dictionary.Add(key, new IntervalDataGroup(intervalStartTime, intervalLength, reading));
+                    dictionary.Add(key, new IntervalDataGroup(sensorId, intervalStartTime, intervalLength, reading));
                 }
                 else
                 {
@@ -148,14 +149,16 @@ namespace SmartHome.Pwa.Core.Services
 
         public class IntervalDataGroup
         {
+            public string SensorId { get; set; }
             public DateTimeOffset From { get; }
             public DateTimeOffset To { get; }
             public int Count { get; private set; }
             public double TotalTemperature { get; private set; }
             public double TotalHumidity { get; private set; }
 
-            public IntervalDataGroup(DateTimeOffset from, TimeSpan length, TemperatureHumidityReading reading)
+            public IntervalDataGroup(string sensorId, DateTimeOffset from, TimeSpan length, TemperatureHumidityReading reading)
             {
+                SensorId = sensorId;
                 From = from;
                 To = from.Add(length);
                 Count = 1;
@@ -174,6 +177,7 @@ namespace SmartHome.Pwa.Core.Services
             {
                 return new AggregatedTemperatureHumidityReadings
                 {
+                    SensorId = SensorId,
                     From = From,
                     To = To,
                     Count = Count,
