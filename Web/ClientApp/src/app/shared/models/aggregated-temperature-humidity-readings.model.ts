@@ -1,8 +1,8 @@
 export interface IAggregatedTemperatureHumidityReadings {
    sensorId: string;
    count: number;
-   fromWest: Date;
-   toWest: Date;
+   fromWest: string;
+   toWest: string;
    averageTemperature: number;
    averageHumidity: number;
 }
