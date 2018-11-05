@@ -21,7 +21,6 @@ export class SensorTemperatureGraphComponent implements OnInit {
 
       this.climateService.getTemperatureHumidity(this.sensorId, dateFns.subDays(now, 1), now).subscribe(
          readings => {
-            console.table(readings);
             this.updateChart(readings);
          },
          error => console.log(error)
@@ -39,6 +38,7 @@ export class SensorTemperatureGraphComponent implements OnInit {
                   data: data.map(reading => reading.averageTemperature),
                   borderColor: '#3cba9f',
                   fill: false,
+                  pointRadius: 0
                },
             ],
          },
@@ -50,11 +50,17 @@ export class SensorTemperatureGraphComponent implements OnInit {
                xAxes: [
                   {
                      display: true,
+                     gridLines: {
+                        display: false
+                     }
                   },
                ],
                yAxes: [
                   {
                      display: true,
+                     gridLines: {
+                        display: false
+                     }
                   },
                ],
             },
