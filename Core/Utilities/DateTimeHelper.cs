@@ -49,6 +49,8 @@ namespace SmartHome.Pwa.Core.Utilities
 
         public static DateTimeOffset ConvertWestToUtcOffset(DateTime dateTime)
         {
+            if (dateTime.Kind != DateTimeKind.Unspecified)
+                dateTime = new DateTime(dateTime.Ticks, DateTimeKind.Unspecified);
             return new DateTimeOffset(dateTime, WestTimeZoneInfo.GetUtcOffset(dateTime));
         }
     }
