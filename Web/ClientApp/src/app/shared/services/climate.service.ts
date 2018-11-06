@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import * as dateFns from 'date-fns';
 import { ITemperatureHumidityReading } from '../models/temperature-humidity-reading.model';
 import { HttpClient } from '@angular/common/http';
 import { IAggregatedTemperatureHumidityReadings } from '../models/aggregated-temperature-humidity-readings.model';

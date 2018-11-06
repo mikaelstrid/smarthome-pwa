@@ -7,9 +7,7 @@ import { Subject } from 'rxjs';
 import { SignalRConnectionInfo } from '../models/signalr-connection-info.model';
 import { ITemperatureHumidityReading } from '../models/temperature-humidity-reading.model';
 
-@Injectable({
-   providedIn: 'root',
-})
+@Injectable()
 export class SignalRService {
    private readonly _http: HttpClient;
    private readonly _baseUrl: string =

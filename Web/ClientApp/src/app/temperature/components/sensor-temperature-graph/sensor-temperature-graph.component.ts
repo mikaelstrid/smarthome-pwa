@@ -35,7 +35,7 @@ export class SensorTemperatureGraphComponent implements OnInit {
                new Date(reading.fromWest).toLocaleTimeString('sv', { hour: 'numeric', minute: 'numeric' })),
             datasets: [
                {
-                  data: data.map(reading => reading.averageTemperature),
+                  data: data.map<number>(reading => reading.averageTemperature),
                   borderColor: '#3cba9f',
                   fill: false,
                   pointRadius: 0
