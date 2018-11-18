@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartHome.Pwa.Core.Interfaces;
 using SmartHome.Pwa.Core.Services;
 using SmartHome.Pwa.Infrastructure.Configuration;
+using SmartHome.Pwa.Infrastructure.CurrentWeather;
 using SmartHome.Pwa.Infrastructure.TemperatureHumidity;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -27,6 +28,8 @@ namespace SmartHome.Pwa.Web
             services.Configure<TableStorageOptions>(Configuration.GetSection("TableStorage"));
 
             services.AddTransient<ITemperatureHumidityRepository, TemperatureHumidityTableStorage>();
+            services.AddTransient<ICurrentWeatherRepository, CurrentWeatherTableStorage>();
+
             services.AddTransient<IClimateService, ClimateService>();
 
             // In production, the Angular files will be served from this directory

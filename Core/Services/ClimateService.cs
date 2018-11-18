@@ -11,11 +11,14 @@ namespace SmartHome.Pwa.Core.Services
     public class ClimateService : IClimateService
     {
         private readonly ITemperatureHumidityRepository _temperatureHumidityRepository;
+        private readonly ICurrentWeatherRepository _currentWeatherRepository;
 
-        public ClimateService(ITemperatureHumidityRepository temperatureHumidityRepository)
+        public ClimateService(ITemperatureHumidityRepository temperatureHumidityRepository, ICurrentWeatherRepository currentWeatherRepository)
         {
             _temperatureHumidityRepository = temperatureHumidityRepository;
+            _currentWeatherRepository = currentWeatherRepository;
         }
+
 
         public async Task<DataResult<TemperatureHumidityReading>> GetLatestTemperatureHumidityReading(string sensorId)
         {
@@ -44,6 +47,13 @@ namespace SmartHome.Pwa.Core.Services
             return DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>
                 .CreateSuccessResult(intervalDataGroups.Select(g => g.MapToBusinessModel()));
         }
+
+        public async Task<DataResult<CurrentWeatherReport>> GetCurrentWeatherReport(string city)
+        {
+            return await _currentWeatherRepository.GetLatest(city);
+        }
+
+
 
         internal static TimeSpan CalculateIntervalLength(TimeSpan input)
         {
@@ -83,7 +93,7 @@ namespace SmartHome.Pwa.Core.Services
             var dictionary = new SortedDictionary<long, IntervalDataGroup>();
             foreach (var reading in readings)
             {
-                var intervalStartTime = CalculateIntervalStartTime(reading.Timestamp, intervalLength);
+                var intervalStartTime = CalculateIntervalStartTime(reading.TimestampUtc, intervalLength);
                 var key = intervalStartTime.UtcTicks;
                 if (!dictionary.ContainsKey(key))
                 {
@@ -149,12 +159,13 @@ namespace SmartHome.Pwa.Core.Services
 
         public class IntervalDataGroup
         {
-            public string SensorId { get; set; }
+            private string SensorId { get; }
+            private double TotalTemperature { get; set; }
+            private double TotalHumidity { get; set; }
+
             public DateTimeOffset From { get; }
             public DateTimeOffset To { get; }
             public int Count { get; private set; }
-            public double TotalTemperature { get; private set; }
-            public double TotalHumidity { get; private set; }
 
             public IntervalDataGroup(string sensorId, DateTimeOffset from, TimeSpan length, TemperatureHumidityReading reading)
             {

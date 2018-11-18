@@ -39,5 +39,17 @@ namespace SmartHome.Pwa.Web.Controllers
 
             return Ok(result.Data.Select(r => r.ToApiModel()));
         }
+
+        [HttpGet("{city}/current-weather")]
+        public async Task<IActionResult> GetCurrentWeather(string city)
+        {
+            var result = await _climateService.GetCurrentWeatherReport(city);
+
+            if (!result.IsSuccessful)
+                return result.Error.ErrorCode == ErrorCode.NotFound ? NotFound() : StatusCode(500);
+
+            return Ok(result.Data.ToApiModel());
+        }
+
     }
 }

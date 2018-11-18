@@ -63,7 +63,7 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") }
             };
 
             // ACT
@@ -82,8 +82,8 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:47 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:18:47 +01:00") }
             };
 
             // ACT
@@ -102,8 +102,8 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:19:47 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:19:47 +01:00") }
             };
 
             // ACT
@@ -125,8 +125,8 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:20:47 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:20:47 +01:00") }
             };
 
             // ACT
@@ -148,8 +148,8 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:20:47 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:20:47 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:18:17 +01:00") }
             };
 
             // ACT
@@ -171,8 +171,8 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:01:07 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:51:47 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:01:07 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:51:47 +01:00") }
             };
 
             // ACT
@@ -194,9 +194,9 @@ namespace SmartHome.Pwa.Core.Tests.Services
             // ARRANGE
             var readings = new[]
             {
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:01:07 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:51:47 +01:00") },
-                new TemperatureHumidityReading { Timestamp = DateTimeOffset.Parse("2018-10-30 20:11:07 +01:00") }
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:01:07 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:51:47 +01:00") },
+                new TemperatureHumidityReading { TimestampUtc = DateTimeOffset.Parse("2018-10-30 20:11:07 +01:00") }
             };
 
             // ACT

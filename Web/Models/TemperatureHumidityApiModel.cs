@@ -19,7 +19,7 @@ namespace SmartHome.Pwa.Web.Models
             return new TemperatureHumidityApiModel
             {
                 SensorId = businessModel.SensorId,
-                TimestampWest = DateTimeOffsetHelper.ConvertToWest(businessModel.Timestamp),
+                TimestampWest = DateTimeOffsetHelper.ConvertToWest(businessModel.TimestampUtc),
                 Temperature = businessModel.Temperature,
                 Humidity = businessModel.Humidity
             };

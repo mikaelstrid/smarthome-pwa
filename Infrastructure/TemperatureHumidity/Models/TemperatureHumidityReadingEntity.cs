@@ -1,13 +1,15 @@
 ﻿using System;
 using Microsoft.WindowsAzure.Storage.Table;
 using SmartHome.Pwa.Core.Models;
+using SmartHome.Pwa.Infrastructure.Common;
+
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace SmartHome.Pwa.Infrastructure.TemperatureHumidity.Models
 {
-    public class TemperatureHumidityReadingEntity : TableEntity
+    public class TemperatureHumidityReadingEntity : TableEntity, IMappableToBusinessModel<TemperatureHumidityReading>
     {
         public DateTimeOffset ReadAtUtc { get; set; }
         public double Temperature { get; set; }
@@ -18,7 +20,7 @@ namespace SmartHome.Pwa.Infrastructure.TemperatureHumidity.Models
             return new TemperatureHumidityReading
             {
                 SensorId = PartitionKey,
-                Timestamp = ReadAtUtc,
+                TimestampUtc = ReadAtUtc,
                 Temperature = Temperature,
                 Humidity = Humidity
             };

@@ -10,5 +10,6 @@ namespace SmartHome.Pwa.Core.Interfaces
     {
         Task<DataResult<TemperatureHumidityReading>> GetLatestTemperatureHumidityReading(string sensorId);
         Task<DataResult<IEnumerable<AggregatedTemperatureHumidityReadings>>> GetTemperatureHumidityReadings(string sensorId, DateTimeOffset from, DateTimeOffset to);
+        Task<DataResult<CurrentWeatherReport>> GetCurrentWeatherReport(string city);
     }
 }
