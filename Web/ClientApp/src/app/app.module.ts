@@ -9,15 +9,17 @@ import { SensorTemperatureComponent } from './temperature/components/sensor-temp
 import { ClimateService } from './shared/services/climate.service';
 import { SignalRService } from './shared/services/signalr.service';
 import { SensorTemperatureGraphComponent } from './temperature/components/sensor-temperature-graph/sensor-temperature-graph.component';
+import { CurrentWeatherComponent } from './current-weather/current-weather.component';
 
 @NgModule({
-   declarations: [AppComponent, TemperatureComponent, SensorTemperatureComponent, SensorTemperatureGraphComponent],
+   declarations: [AppComponent, TemperatureComponent, SensorTemperatureComponent, SensorTemperatureGraphComponent, CurrentWeatherComponent],
    imports: [
       BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
       HttpClientModule,
       RouterModule.forRoot([
          // { path: '', component: HomeComponent, pathMatch: 'full' }
          { path: 'temperatur', component: TemperatureComponent },
+         { path: 'vader', component: CurrentWeatherComponent },
          { path: '**', redirectTo: 'temperatur' },
       ]),
    ],

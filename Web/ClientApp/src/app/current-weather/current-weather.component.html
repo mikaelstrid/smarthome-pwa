@@ -1,0 +1,14 @@
+<div class="row" *ngIf="currentWeatherReport">
+   <div class="col-12">
+      <div class="my-5">
+         <div class="d-flex flex-column justify-content-center align-items-center">
+            <span class="temperature-reading">{{ currentWeatherReport.temperature }}&deg;</span>
+            <span class="text-muted">{{currentWeatherReport.timestampWest | date: 'HH:mm:ss'}}</span>
+         </div>
+      </div>
+      <div class="my-5 text-center">
+         <p>{{currentWeatherReport.weatherDescription}}</p>
+         <img src="https://openweathermap.org/img/w/{{currentWeatherReport.weatherIcon}}.png"/>
+      </div>
+   </div>
+</div>

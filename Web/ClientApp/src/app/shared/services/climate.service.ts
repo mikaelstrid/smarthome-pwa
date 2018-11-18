@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { ITemperatureHumidityReading } from '../models/temperature-humidity-reading.model';
 import { HttpClient } from '@angular/common/http';
 import { IAggregatedTemperatureHumidityReadings } from '../models/aggregated-temperature-humidity-readings.model';
+import { ICurrentWeatherReport } from '../models/current-weather-report.model';
 
 @Injectable()
 export class ClimateService {
@@ -69,5 +70,21 @@ export class ClimateService {
             averageHumidity: 43.4
          }
       ]);
+   }
+
+   getCurrentWeather(city: string): Observable<ICurrentWeatherReport> {
+      if (!this.useMockData) {
+         return this.httpClient.get<ICurrentWeatherReport>(
+            `/api/climate/${city}/current-weather`
+         );
+      }
+      return of({
+         city: 'lindome',
+         timestampWest: new Date(),
+         weatherId: 803,
+         weatherDescription: 'molningt',
+         weatherIcon: '04n',
+         temperature: 3
+      });
    }
 }
